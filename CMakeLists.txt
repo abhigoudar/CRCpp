@@ -9,18 +9,23 @@ endif ()
 
 # Build options
 option(BUILD_DOC "Build documentation" OFF)
-option(BUILD_TEST "Build test" ON)
+option(BUILD_TEST "Build test" OFF)
 
 # Compiler options
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Header file(s)
-add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+find_package(ament_cmake REQUIRED)
 
-# Installation
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/ DESTINATION include)
+include_directories(
+  include
+  ${EIGEN3_INCLUDE_DIRS}
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include/
+)
 
 # Documentation
 if (BUILD_DOC)
@@ -48,3 +53,6 @@ if (BUILD_TEST)
                       COMMAND ${CMAKE_CTEST_COMMAND}
                       DEPENDS unittest)
 endif ()
+
+ament_export_include_directories(include)
+ament_package()
